@@ -52,18 +52,25 @@ export default class GameMain extends cc.Component {
         player == 1 ? label.string = "X" : label.string = "O";
 
         button.enabled = false;
-        button.normalSprite = this.buttonDisabledFrameX;
+        player == 1 ?
+            button.normalSprite = this.buttonDisabledFrameX :
+            button.normalSprite = this.buttonDisabledFrameO;
 
         let isWin = this.game.CheckWin();
         console.log(isWin);
 
-        if (isWin == 1) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        } else if (isWin == 10) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        }
+        setTimeout(() => {
+
+            if (isWin == 1) {
+
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            } else if (isWin == 10) {
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            }
+        }, 1000)
+
     }
 
     buttonCallback_AI(id: number, button: cc.Button, label: cc.Label) {
@@ -93,15 +100,17 @@ export default class GameMain extends cc.Component {
 
         console.log(isWin);
 
+        setTimeout(() => {
 
-        if (isWin == 1) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        } else if (isWin == 10) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        }
+            if (isWin == 1) {
 
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            } else if (isWin == 10) {
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            }
+        }, 1000)
     }
 
     buttonMenuCallback() {
