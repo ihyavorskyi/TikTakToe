@@ -40,7 +40,7 @@ export default class Finish extends cc.Component {
             sprite.spriteFrame = this.winNon;
         }
         
-        node.setScale(0.5);
+        node.setScale(0.4);
         node.setPosition(0, 200);
         this.node.addChild(node);
     }
