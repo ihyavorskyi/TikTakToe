@@ -59,18 +59,23 @@ export default class GameMain extends cc.Component {
         let isWin = this.game.CheckWin();
         console.log(isWin);
 
-        setTimeout(() => {
+        if (isWin) {
+            setTimeout(() => {
 
-            if (isWin == 1) {
-
-                Finish.winId = isWin;
-                cc.director.loadScene("Finish")
-            } else if (isWin == 10) {
-                Finish.winId = isWin;
-                cc.director.loadScene("Finish")
-            }
-        }, 1000)
-
+                if (isWin.winner == 1) {
+                    Finish.winId = isWin.winner;
+                    cc.director.loadScene("Finish")
+                } else if (isWin.winner == 10) {
+                    Finish.winId = isWin.winner;
+                    cc.director.loadScene("Finish")
+                }
+                for (let i = 0; i < this.buttonArray.length; i++) {
+                    if (i == isWin.first || i == isWin.second || i == isWin.third) {
+                        console.log('index: ' + i);
+                    }
+                }
+            }, 1000)
+        }
     }
 
     buttonCallback_AI(id: number, button: cc.Button, label: cc.Label) {
@@ -99,18 +104,19 @@ export default class GameMain extends cc.Component {
         let isWin = this.game.CheckWin();
 
         console.log(isWin);
+        if (isWin) {
+            setTimeout(() => {
 
-        setTimeout(() => {
+                if (isWin.winner == 1) {
 
-            if (isWin == 1) {
-
-                Finish.winId = isWin;
-                cc.director.loadScene("Finish")
-            } else if (isWin == 10) {
-                Finish.winId = isWin;
-                cc.director.loadScene("Finish")
-            }
-        }, 1000)
+                    Finish.winId = isWin.winner;
+                    cc.director.loadScene("Finish")
+                } else if (isWin.winner == 10) {
+                    Finish.winId = isWin.winner;
+                    cc.director.loadScene("Finish")
+                }
+            }, 1000)
+        }
     }
 
     buttonMenuCallback() {

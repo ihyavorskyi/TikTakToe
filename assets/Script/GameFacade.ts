@@ -1,5 +1,6 @@
 import { position } from './../../creator.d';
 import Finish from "./Finish";
+import WinResponse from './WinResponse';
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -28,7 +29,8 @@ export default class GameFacade extends cc.Component {
     GoStepWithAI_Middle(position: number) {
         this.GoStep_Before(position);
 
-        if (this.CheckWin() != 0)
+        var res = this.CheckWin();
+        if (res && res.isWin)
             return null;
 
         this.GoStepAIMiddle();
@@ -38,7 +40,8 @@ export default class GameFacade extends cc.Component {
     }
 
     GoStepWithAI_Hard(position: number) {
-        if (this.CheckWin() != 0)
+        var res = this.CheckWin();
+        if (res && res.isWin)
             return null;
         this.GoStep_Before(position);
         var result = this.GoStepAIHard();
@@ -209,7 +212,7 @@ export default class GameFacade extends cc.Component {
         this.currentPlayer == 1 ? this.currentPlayer = 10 : this.currentPlayer = 1;
     }
 
-    CheckWin(): number {
+    CheckWin(): WinResponse {
         var isNoOne = this.gameField.every(r => r != 0);
         if (isNoOne) {
             setTimeout(() => {
@@ -220,18 +223,27 @@ export default class GameFacade extends cc.Component {
         }
         var isXWins = this.CheckWinForPlayer(1);
         var isOWins = this.CheckWinForPlayer(10);
+        console.log(isXWins);
+        console.log(isOWins);
 
-        if (isXWins)
-            return 1;
-        else if (isOWins)
-            return 10;
-        else
-            return 0;
+        if (isXWins.isWin) {
+            isXWins.winner = 1;
+            return isXWins;
+        }
+        else if (isOWins.isWin) {
+            isOWins.winner = 10;
+            return isOWins;
+        }
+        else {
+            return null;
+        }
+
 
     }
 
-    private CheckWinForPlayer(type: number): boolean {
+    private CheckWinForPlayer(type: number): WinResponse {
         this.Display();
+        var response = new WinResponse();
         var isRowSuccess = false;
         for (let i = 0; i < 9; i += 3) {
             for (let j = i; j < i + 3; j++) {
@@ -242,8 +254,11 @@ export default class GameFacade extends cc.Component {
                     break;
                 }
             }
-            if (isRowSuccess)
-                break;
+            if (isRowSuccess) {
+                response.first = i;
+                response.second = i + 1;
+                response.third = i + 2;
+            }
         }
 
         var isColumnSuccess = false;
@@ -256,8 +271,11 @@ export default class GameFacade extends cc.Component {
                     break;
                 }
             }
-            if (isColumnSuccess)
-                break;
+            if (isColumnSuccess) {
+                response.first = i;
+                response.second = i + 3;
+                response.third = i + 6;
+            }
         }
 
         var isLeftDiagonalSuccess = false;
@@ -269,6 +287,12 @@ export default class GameFacade extends cc.Component {
                 break;
             }
         }
+        if (isLeftDiagonalSuccess) {
+            response.first = 0;
+            response.second = 4;
+            response.third = 7;
+
+        }
 
         var isRightDiagonalSuccess = false;
         for (let j = 0; j < 9; j += 2) {
@@ -279,9 +303,15 @@ export default class GameFacade extends cc.Component {
                 break;
             }
         }
+        if (isRightDiagonalSuccess) {
+            response.first = 2;
+            response.second = 4;
+            response.third = 6;
 
+        }
         var success = isRowSuccess || isColumnSuccess || isRightDiagonalSuccess || isLeftDiagonalSuccess;
-        return success;
+        response.isWin = success;
+        return response;
     }
 
     Display() {
