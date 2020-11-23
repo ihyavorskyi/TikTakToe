@@ -9,9 +9,12 @@ export default class GameFacade extends cc.Component {
     currentPlayer = 1;
     gameField = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    GoStep(position: number) {
-        this.gameField[position] = this.currentPlayer;
+    GoStep(position: number): number {
+        this.gameField[--position] = this.currentPlayer;
+        var current = this.currentPlayer;
         this.ReversePlayer();
+        this.Display();
+        return current;
     }
 
     private ReversePlayer() {
@@ -21,7 +24,7 @@ export default class GameFacade extends cc.Component {
     CheckWin(): number {
         var isXWins = this.CheckWinForPlayer(1);
         var isOWins = this.CheckWinForPlayer(2);
-        
+
         if (isXWins)
             return 1;
         else if (isOWins)
@@ -37,6 +40,8 @@ export default class GameFacade extends cc.Component {
             for (let j = i; j < i + 3; j++) {
                 this.gameField[j] == type ? isRowSuccess = true : isRowSuccess = false;
             }
+            if (isRowSuccess)
+                break;
         }
 
         var isColumnSuccess = false;
@@ -44,6 +49,8 @@ export default class GameFacade extends cc.Component {
             for (let j = i; j < 9; j += 3) {
                 this.gameField[j] == type ? isColumnSuccess = true : isColumnSuccess = false;
             }
+            if (isColumnSuccess)
+                break;
         }
 
         var isLeftDiagonalSuccess = false;
@@ -57,7 +64,15 @@ export default class GameFacade extends cc.Component {
         }
 
         var success = isRowSuccess || isColumnSuccess || isRightDiagonalSuccess || isLeftDiagonalSuccess;
+
+
+
+        console.log(`row: ${isRowSuccess}\ncolumn: ${isColumnSuccess}\nrDig: ${isRightDiagonalSuccess}\nleftDig: ${isLeftDiagonalSuccess}`);
         return success;
+    }
+
+    Display() {
+        console.log("Game field -> " + this.gameField);
     }
 
     // onLoad () {}
