@@ -1,3 +1,4 @@
+import { position } from './../../creator.d';
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -11,72 +12,58 @@ export default class GameFacade extends cc.Component {
     lastField = 0;
 
     GoStep(position: number): number {
-        this.gameField[--position] = this.currentPlayer;
-        var current = this.currentPlayer;
-        this.ReversePlayer();
-        this.Display();
-        this.lastField = position;
-        console.log('Last: ' + this.lastField);
-
-        return current;
+        return this.GoStep_Before(position);
     }
 
+
     GoStepWithAI_Low(position: number) {
-        this.gameField[--position] = this.currentPlayer;
-        var current = this.currentPlayer;
-        this.ReversePlayer();
-        console.log('BEFORE AI');
-        this.Display();
-        this.lastField = position;
-        console.log('Last: ' + this.lastField);
+        this.GoStep_Before(position);
         this.GoStepAIEasy();
-        console.log('AFTER AI');
-        this.Display();
-        this.ReversePlayer();
+        this.GoStepAI_After();
         return this.lastField;
     }
 
+
     GoStepWithAI_Middle(position: number) {
-        this.gameField[--position] = this.currentPlayer;
-        var current = this.currentPlayer;
-        this.ReversePlayer();
-        console.log('BEFORE AI');
-        this.Display();
-        this.lastField = position;
-        console.log('Last: ' + this.lastField);
-        if (this.CheckWin() != 0) {
+        this.GoStep_Before(position);
+
+        if (this.CheckWin() != 0)
             return null;
-        }
+
         this.GoStepAIMiddle();
-        console.log('AFTER AI');
-        this.Display();
-        this.ReversePlayer();
+        this.GoStepAI_After();
+
         return this.lastField;
     }
 
     GoStepWithAI_Hard(position: number) {
+        if (this.CheckWin() != 0)
+            return null;
+        this.GoStep_Before(position);
+        var result = this.GoStepAIHard();
+
+        if (result)
+            return this.lastField;
+        else
+            this.GoStepAIMiddle();
+
+        this.GoStepAI_After();
+
+        return this.lastField;
+    }
+
+    GoStep_Before(position: number) {
         this.gameField[--position] = this.currentPlayer;
         var current = this.currentPlayer;
         this.ReversePlayer();
-        console.log('BEFORE AI');
         this.Display();
         this.lastField = position;
-        console.log('Last: ' + this.lastField);
-        if (this.CheckWin() != 0) {
-            return null;
-        }
-        var result = this.GoStepAIHard();
-        console.log('Attack: ' + result);
+        return current;
+    }
 
-        if (result) {
-            return this.lastField;
-        } else {
-            this.GoStepAIMiddle();
-        }
-        console.log('AFTER AI');
+    GoStepAI_After() {
         this.Display();
         this.ReversePlayer();
-        return this.lastField;
     }
 
     private GoStepAIHard() {
@@ -90,9 +77,8 @@ export default class GameFacade extends cc.Component {
                     }
                 }
             }
-            else {
+            else
                 continue;
-            }
         }
 
         for (let i = 0; i < 3; i++) {
@@ -106,9 +92,8 @@ export default class GameFacade extends cc.Component {
                 }
                 break;
             }
-            else {
+            else
                 continue;
-            }
         }
 
         if (this.gameField[0] + this.gameField[4] + this.gameField[8] == 20) {
@@ -134,8 +119,6 @@ export default class GameFacade extends cc.Component {
     }
 
     private GoStepAIMiddle() {
-        console.log('MIDDLE' + this.currentPlayer);
-
         for (let i = 0; i < 9; i += 3) {
             if (this.gameField[i] + this.gameField[i + 1] + this.gameField[i + 2] == 2) {
                 for (let j = i; j < 9; j++) {
@@ -205,9 +188,8 @@ export default class GameFacade extends cc.Component {
         else if (this.gameField[8] == 0) {
             this.gameField[8] = this.currentPlayer;
             this.lastField = 8;
-        } else {
+        } else
             this.StepOnRandomPosition();
-        }
     }
 
     private StepOnRandomPosition() {
@@ -217,9 +199,8 @@ export default class GameFacade extends cc.Component {
                 this.lastField = i;
                 break;
             }
-            else {
+            else
                 continue;
-            }
         }
     }
 
@@ -228,6 +209,10 @@ export default class GameFacade extends cc.Component {
     }
 
     CheckWin(): number {
+        var isNoOne = this.gameField.every(r => r != 0);
+        if (isNoOne) {
+            return -1;
+        }
         var isXWins = this.CheckWinForPlayer(1);
         var isOWins = this.CheckWinForPlayer(10);
 
