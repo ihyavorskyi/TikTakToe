@@ -258,6 +258,7 @@ export default class GameFacade extends cc.Component {
                 response.first = i;
                 response.second = i + 1;
                 response.third = i + 2;
+                break;
             }
         }
 
@@ -275,6 +276,7 @@ export default class GameFacade extends cc.Component {
                 response.first = i;
                 response.second = i + 3;
                 response.third = i + 6;
+                break;
             }
         }
 
@@ -290,14 +292,16 @@ export default class GameFacade extends cc.Component {
         if (isLeftDiagonalSuccess) {
             response.first = 0;
             response.second = 4;
-            response.third = 7;
+            response.third = 8;
 
         }
 
         var isRightDiagonalSuccess = false;
-        for (let j = 0; j < 9; j += 2) {
-            if (this.gameField[j] == type)
+        for (let j = 2; j < 8; j += 2) {
+            if (this.gameField[j] == type) {
+                console.log('rigth - ', j);
                 isRightDiagonalSuccess = true;
+            }
             else {
                 isRightDiagonalSuccess = false;
                 break;
@@ -310,6 +314,7 @@ export default class GameFacade extends cc.Component {
 
         }
         var success = isRowSuccess || isColumnSuccess || isRightDiagonalSuccess || isLeftDiagonalSuccess;
+        console.log('success: ' + success);
         response.isWin = success;
         return response;
     }

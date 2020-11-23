@@ -63,6 +63,11 @@ export default class GameMain extends cc.Component {
         console.log(isWin);
 
         if (isWin) {
+            for (let i = 0; i < this.buttonArray.length; i++) {
+                if (i == isWin.first || i == isWin.second || i == isWin.third) {
+                    this.buttonArray[i].normalSprite = this.buttonDisabledFRedFrame;
+                }
+            }
             setTimeout(() => {
 
                 if (isWin.winner == 1) {
@@ -72,11 +77,7 @@ export default class GameMain extends cc.Component {
                     Finish.winId = isWin.winner;
                     cc.director.loadScene("Finish")
                 }
-                for (let i = 0; i < this.buttonArray.length; i++) {
-                    if (i == isWin.first || i == isWin.second || i == isWin.third) {
-                        console.log('index: ' + i);
-                    }
-                }
+
             }, 1000)
         }
     }
@@ -108,6 +109,11 @@ export default class GameMain extends cc.Component {
 
         console.log(isWin);
         if (isWin) {
+            for (let i = 0; i < this.buttonArray.length; i++) {
+                if (i == isWin.first || i == isWin.second || i == isWin.third) {
+                    this.buttonArray[i].normalSprite = this.buttonDisabledFRedFrame;
+                }
+            }
             setTimeout(() => {
 
                 if (isWin.winner == 1) {
@@ -118,6 +124,7 @@ export default class GameMain extends cc.Component {
                     Finish.winId = isWin.winner;
                     cc.director.loadScene("Finish")
                 }
+
             }, 1000)
         }
     }
