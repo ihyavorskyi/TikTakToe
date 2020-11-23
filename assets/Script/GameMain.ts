@@ -1,8 +1,19 @@
+import Finish from "./Finish";
 import GameFacade from "./GameFacade";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class GameMain extends cc.Component {
+
+    static Level = 0;
+    level: number;
+
+
+    @property(cc.SpriteFrame)
+    buttonDisabledFrameX: cc.SpriteFrame = null;
+
+    @property(cc.SpriteFrame)
+    buttonDisabledFrameO: cc.SpriteFrame = null;
 
     game: GameFacade;
 
@@ -11,6 +22,7 @@ export default class GameMain extends cc.Component {
 
     onLoad() {
 
+        this.level = GameMain.Level;
         this.loadButtons();
 
         for (let i = 0, j = 1; i < this.buttonArray.length; i++, j++) {
@@ -18,30 +30,91 @@ export default class GameMain extends cc.Component {
                 this.buttonCallback(j, this.buttonArray[i], this.labelArray[i])
             }, this);
         }
+
         this.game = new GameFacade;
     }
 
     buttonCallback(id: number, button: cc.Button, label: cc.Label) {
+        if (this.level == 1) {
+            this.buttonCallback_Human(id, button, label);
+        } else {
+            this.buttonCallback_AI(id, button, label);
+        }
+    }
+
+    buttonCallback_Human(id: number, button: cc.Button, label: cc.Label) {
         var player = this.game.GoStep(id);
         player == 1 ? label.string = "X" : label.string = "O";
 
         button.enabled = false;
+        button.normalSprite = this.buttonDisabledFrameX;
 
         let isWin = this.game.CheckWin();
         console.log(isWin);
-        
-        isWin == 1 ? console.log('X WIN') : isWin == 2 ? console.log('O WIN')
-            : console.log('not win yet....');
+
+        if (isWin == 1) {
+            Finish.winId = isWin;
+            cc.director.loadScene("Finish")
+        } else if (isWin == 2) {
+            Finish.winId = isWin;
+            cc.director.loadScene("Finish")
+        }
+    }
+
+    buttonCallback_AI(id: number, button: cc.Button, label: cc.Label) {
+        var last = 0;
+        switch (this.level) {
+            case 2:
+                last = this.game.GoStepWithAI_Low(id);
+                break;
+            case 3:
+                last = this.game.GoStepWithAI_Middle(id);
+                break;
+            case 4:
+                last = this.game.GoStepWithAI_Hard(id);
+                break;
+
+        }
+        label.string = "X";
+
+        button.enabled = false;
+        button.normalSprite = this.buttonDisabledFrameX;
+
+        this.buttonArray[last].enabled = false;
+        this.buttonArray[last].normalSprite = this.buttonDisabledFrameO;
+        this.labelArray[last].string = 'O';
+
+        let isWin = this.game.CheckWin();
+
+        if (isWin == 1) {
+            Finish.winId = isWin;
+            cc.director.loadScene("Finish")
+        } else if (isWin == 2) {
+            Finish.winId = isWin;
+            cc.director.loadScene("Finish")
+        }
+
+    }
+
+    disableButtons() {
+        this.buttonArray.forEach(element => {
+            element.enabled = false;
+        });
     }
 
 
     loadButtons() {
+
         for (let i = 1; i < 10; i++) {
 
             let button = cc.find(`Canvas/Button${i}`).getComponent(cc.Button);
             this.buttonArray.push(button);
 
-            let label = cc.find(`Canvas/Button${i}/Background/Label${i}`).getComponent(cc.Label);
+            let labelNode = cc.find(`Canvas/Button${i}/Background/Label${i}`);
+            labelNode.height = 100;
+            let label = labelNode.getComponent(cc.Label);
+            label.fontSize = 60;
+
             this.labelArray.push(label);
         }
     }
