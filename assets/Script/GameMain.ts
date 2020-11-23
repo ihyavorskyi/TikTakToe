@@ -15,6 +15,9 @@ export default class GameMain extends cc.Component {
     @property(cc.SpriteFrame)
     buttonDisabledFrameO: cc.SpriteFrame = null;
 
+    @property(cc.SpriteFrame)
+    buttonDisabledFRedFrame: cc.SpriteFrame = null;
+
     @property(cc.Button)
     buttonMenu: cc.Button = null;
 
