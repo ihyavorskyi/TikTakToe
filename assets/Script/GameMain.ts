@@ -59,13 +59,18 @@ export default class GameMain extends cc.Component {
         let isWin = this.game.CheckWin();
         console.log(isWin);
 
-        if (isWin == 1) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        } else if (isWin == 10) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        }
+        setTimeout(() => {
+
+            if (isWin == 1) {
+
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            } else if (isWin == 10) {
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            }
+        }, 1000)
+
     }
 
     buttonCallback_AI(id: number, button: cc.Button, label: cc.Label) {
@@ -95,15 +100,17 @@ export default class GameMain extends cc.Component {
 
         console.log(isWin);
 
+        setTimeout(() => {
 
-        if (isWin == 1) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        } else if (isWin == 10) {
-            Finish.winId = isWin;
-            cc.director.loadScene("Finish")
-        }
+            if (isWin == 1) {
 
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            } else if (isWin == 10) {
+                Finish.winId = isWin;
+                cc.director.loadScene("Finish")
+            }
+        }, 1000)
     }
 
     buttonMenuCallback() {
