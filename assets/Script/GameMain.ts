@@ -15,6 +15,9 @@ export default class GameMain extends cc.Component {
     @property(cc.SpriteFrame)
     buttonDisabledFrameO: cc.SpriteFrame = null;
 
+    @property(cc.Button)
+    buttonMenu: cc.Button = null;
+
     game: GameFacade;
 
     buttonArray: cc.Button[] = [];
@@ -30,6 +33,8 @@ export default class GameMain extends cc.Component {
                 this.buttonCallback(j, this.buttonArray[i], this.labelArray[i])
             }, this);
         }
+
+        this.buttonMenu.node.on('click', this.buttonMenuCallback, this);
 
         this.game = new GameFacade;
     }
@@ -55,7 +60,7 @@ export default class GameMain extends cc.Component {
         if (isWin == 1) {
             Finish.winId = isWin;
             cc.director.loadScene("Finish")
-        } else if (isWin == 2) {
+        } else if (isWin == 10) {
             Finish.winId = isWin;
             cc.director.loadScene("Finish")
         }
@@ -86,14 +91,21 @@ export default class GameMain extends cc.Component {
 
         let isWin = this.game.CheckWin();
 
+        console.log(isWin);
+
+
         if (isWin == 1) {
             Finish.winId = isWin;
             cc.director.loadScene("Finish")
-        } else if (isWin == 2) {
+        } else if (isWin == 10) {
             Finish.winId = isWin;
             cc.director.loadScene("Finish")
         }
 
+    }
+
+    buttonMenuCallback() {
+        cc.director.loadScene("Menu");
     }
 
     disableButtons() {

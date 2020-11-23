@@ -22,7 +22,7 @@ export default class Finish extends cc.Component {
 
         if(winId == 1){
             sprite.spriteFrame = this.winX;
-        }else if(winId == 2){
+        }else if(winId == 10){
             sprite.spriteFrame = this.winO;
         }
         
