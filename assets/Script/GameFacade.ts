@@ -1,3 +1,4 @@
+import Finish from "./Finish";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -228,6 +229,12 @@ export default class GameFacade extends cc.Component {
     }
 
     CheckWin(): number {
+        var isNoOne = this.gameField.every(r => r != 0);
+        if (isNoOne) {
+            Finish.winId = -1;
+            cc.director.loadScene("Finish");
+            return -1;
+        }
         var isXWins = this.CheckWinForPlayer(1);
         var isOWins = this.CheckWinForPlayer(10);
 

@@ -52,7 +52,9 @@ export default class GameMain extends cc.Component {
         player == 1 ? label.string = "X" : label.string = "O";
 
         button.enabled = false;
-        button.normalSprite = this.buttonDisabledFrameX;
+        player == 1 ?
+            button.normalSprite = this.buttonDisabledFrameX :
+            button.normalSprite = this.buttonDisabledFrameO;
 
         let isWin = this.game.CheckWin();
         console.log(isWin);
